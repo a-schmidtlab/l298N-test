@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Control Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .key { display: inline-block; width: 50px; height: 50px; line-height: 50px; border: 1px solid #000; margin: 5px; }
+        .indicator { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Motor Control Interface</h1>
+    <div>
+        <div class="key" id="key-w">W</div>
+    </div>
+    <div>
+        <div class="key" id="key-a">A</div>
+        <div class="key" id="key-s">S</div>
+        <div class="key" id="key-d">D</div>
+    </div>
+    <div class="indicator" id="motor1-status">Motor 1: Stopped</div>
+    <div class="indicator" id="motor2-status">Motor 2: Stopped</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const keys = { 'w': 'motor1_forward', 's': 'motor1_backward', 'a': 'motor2_forward', 'd': 'motor2_backward' };
+
+        document.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            if (keys[key]) {
+                socket.emit('control', keys[key]);
+                document.getElementById(`key-${key}`).style.backgroundColor = 'lightgreen';
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            const key = event.key.toLowerCase();
+            if (keys[key]) {
+                socket.emit('control', 'stop_all_motors');
+                document.getElementById(`key-${key}`).style.backgroundColor = '';
+            }
+        });
+
+        socket.on('status', (data) => {
+            document.getElementById('motor1-status').textContent = `Motor 1: ${data.motor1}`;
+            document.getElementById('motor2-status').textContent = `Motor 2: ${data.motor2}`;
+        });
+    </script>
+</body>
+</html> 
