@@ -1,4 +1,5 @@
 # Raspberry Pi DC Motor Control System
+# NOT WORKING YET
 
 ## Overview
 This project is a web-based control system for bidirectional operation of two DC motors using a Raspberry Pi 5 and ARCELI L298N motor driver. The system allows real-time control through a web interface using keyboard inputs (WASD keys).
